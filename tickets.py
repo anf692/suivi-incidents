@@ -1,10 +1,11 @@
 from db import connection_db
-from auth import actuelle_user
+import auth
 
 #fonction de création de ticket
 def creation_ticket():
-
-    if not actuelle_user:
+    
+    #vérifier si l'utilisateur est connecté
+    if not auth.actuelle_user:
         print("Veuillez vous connecter.")
         return
 
@@ -23,14 +24,15 @@ def creation_ticket():
         curseur.execute("""
             INSERT INTO tickets (titre, description, urgence, id_user, id_statut)
             VALUES (%s, %s, %s, %s, 1)
-        """, (titre, description, urgence, actuelle_user['id_user']))
+        """, (titre, description, urgence, auth.actuelle_user['id_user']))
 
+        #prendre l'id du ticket créé pour l'historique
         ticket_id = curseur.lastrowid
 
         curseur.execute("""
             INSERT INTO historiques (action, id_user, id_ticket)
             VALUES (%s, %s, %s)
-        """, ("Création du ticket", actuelle_user['id_user'], ticket_id))
+        """, ("Création du ticket", auth.actuelle_user['id_user'], ticket_id))
 
         connexion.commit()
         print("Ticket créé avec succès.")
@@ -44,7 +46,7 @@ def creation_ticket():
 
 #fonction de liste des tickets pour utilisateur connecté
 def liste_tickets():
-    if not actuelle_user:
+    if not auth.actuelle_user:
         print("Veuillez vous connecter.")
         return
 
@@ -57,7 +59,7 @@ def liste_tickets():
             FROM tickets t
             JOIN statuts s ON t.id_statut = s.id_statut
             WHERE t.id_user = %s
-        """, (actuelle_user['id_user'],))
+        """, (auth.actuelle_user['id_user'],))
 
         tickets = curseur.fetchall()
 
@@ -76,7 +78,7 @@ def liste_tickets():
 
 #fonrction de liste des tickets pour admin
 def liste_tickets_admin():
-    if not actuelle_user or actuelle_user['role'] != 'admin':
+    if not auth.actuelle_user or auth.actuelle_user['role'] != 'admin':
         print("Accès refusé.")
         return
 
@@ -105,7 +107,7 @@ def liste_tickets_admin():
 
 #fonction de modification du status par admin
 def Modifier_status():
-    if not actuelle_user or actuelle_user['role'] != 'admin':
+    if not auth.actuelle_user or auth.actuelle_user['role'] != 'admin':
         print("Seul l'admin peut modifier le statut.")
         return
 
@@ -134,7 +136,7 @@ def Modifier_status():
         curseur.execute("""
             INSERT INTO historiques (action, id_user, id_ticket)
             VALUES (%s, %s, %s)
-        """, ("Changement de statut", actuelle_user['id_user'], ticket_id))
+        """, ("Changement de statut", auth.actuelle_user['id_user'], ticket_id))
         connexion.commit()
         print("Statut mis à jour.")
 
