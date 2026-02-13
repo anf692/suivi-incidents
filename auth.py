@@ -57,7 +57,6 @@ def connexion():
 
         curseur.execute("SELECT * FROM utilisateurs WHERE email = %s", (email,))
         user = curseur.fetchone()
-
         #vérifier que l'utilisateur existe et que le mot de passe correspond
         if user and bcrypt.checkpw(password.encode(), user['mot_de_passe'].encode()):
             actuelle_user = user

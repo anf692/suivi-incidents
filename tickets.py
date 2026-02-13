@@ -13,13 +13,37 @@ def creation_ticket():
     curseur = connexion.cursor()
 
     try:
-        titre = input("Entrer la Titre: ").strip()
-        description = input("Entrer le Description: ").strip()
-        urgence = input("Urgence (Faible/Moyenne/Haute): ").strip().capitalize()
 
-        if urgence not in ["Faible", "Moyenne", "Haute"]:
-            print("Urgence invalide.")
-            return
+        #donne de saisir les informations du ticket avec validation
+        while True:
+            try:
+                titre = str(input("Entrer la Titre: ").strip())
+                if not titre.isalpha() or not titre:
+                    print("Le titre invalide.")
+                    continue
+                break
+            except ValueError:
+                print("Titre invalide. Veuillez réessayer.")
+
+        #validation de la description pour éviter les entrées vides
+        while True:
+            try:
+                description = input("Entrer la Description: ").strip()
+                if not description:
+                    print("La description ne peut pas être vide.")
+                    continue
+                break
+            except ValueError:
+                print("Description invalide. Veuillez réessayer.")
+
+        #validation de l'urgence pour n'accepter que les valeurs valides
+        while True:
+            urgence = input("Urgence (Faible/Moyenne/Haute): ").strip().capitalize()
+
+            if urgence not in ["Faible", "Moyenne", "Haute"]:
+                print("Urgence invalide.")
+                continue
+            break
 
         curseur.execute("""
             INSERT INTO tickets (titre, description, urgence, id_user, id_statut)
@@ -115,11 +139,27 @@ def Modifier_status():
     curseur = connexion.cursor()
 
     try:
-        ticket_id = input("ID du ticket: ").strip()
-        new_status_id = input("Nouveau statut (1=En attente, 2=En cours, 3=Résolu): ").strip()
+        #validation de l'id du ticket et du nouveau statut pour éviter les entrées invalides
+        while True:
+            try:
+                ticket_id = input("ID du ticket: ").strip()
+                if not ticket_id.isdigit():
+                    print("ID invalide.")
+                    continue
+                break
+            except ValueError:
+                print("Entrée invalide reessayer.")
 
-        if new_status_id not in ["1", "2", "3"]:
-            print("Statut invalide.")
+        #validation du nouveau statut pour n'accepter que les valeurs valides
+        while True:
+            try:
+                new_status_id = input("Nouveau statut (1=En attente, 2=En cours, 3=Résolu): ").strip()
+                if new_status_id not in ["1", "2", "3"]:
+                    print("Statut invalide.")
+                    continue
+                break
+            except ValueError:
+                print("Entrée invalide reessayer.")
             return
 
         curseur.execute("SELECT id_ticket FROM tickets WHERE id_ticket = %s", (ticket_id,))
