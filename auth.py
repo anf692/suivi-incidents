@@ -14,9 +14,38 @@ def inscription():
     curseur = connexion.cursor()
 
     try:
-        nom = input("Entrer votre Nom: ").strip()
-        email = input("Entrer votre Email: ").strip()
-        password = input("Entrer votre Mot de passe: ").strip()
+        #validation des entrées pour éviter les données invalides
+        while True:
+            try:
+                nom = input("Entrer votre Nom: ").strip()
+                if not nom.isalpha():
+                    print("Nom invalide.")
+                    continue
+                break
+            except ValueError:
+                print("Nom invalide. Veuillez réessayer.")
+
+        #validation de l'email pour s'assurer qu'il contient un '@' et n'est pas vide
+        while True:
+            try:
+                email = input("Entrer votre Email: ").strip()
+                if not email or "@" not in email:
+                    print("Email invalide.")
+                    continue
+                break
+            except ValueError:
+                print("Email invalide. Veuillez réessayer.")
+
+        #validation du mot de passe pour s'assurer qu'il n'est pas vide et a une longueur minimale
+        while True:
+            try:
+                password = input("Entrer votre Mot de passe: ").strip()
+                if not password or len(password) < 8:
+                    print("Mot de passe invalide (minimum 8 caractères).")
+                    continue
+                break
+            except ValueError:
+                print("Mot de passe invalide. Veuillez réessayer.")
 
         #vérifier que tous les champs sont remplis
         if not nom or not email or not password:
@@ -52,8 +81,27 @@ def connexion():
     curseur = connnexion.cursor(dictionary=True)
 
     try:
-        email = input("Entrer votre Email: ").strip()
-        password = input("Entrer votre Mot de passe: ").strip()
+        #validation des entrées pour éviter les données invalides
+        while True:
+            try:
+                email = input("Entrer votre Email: ").strip()
+                if not email or "@" not in email:
+                    print("Email invalide.")
+                    continue
+                break
+            except ValueError:
+                print("Email invalide. Veuillez réessayer.")
+
+        #validation du mot de passe pour s'assurer qu'il n'est pas vide
+        while True:
+            try:
+                password = input("Entrer votre Mot de passe: ").strip()
+                if not password:
+                    print("Mot de passe invalide.")
+                    continue
+                break
+            except ValueError:
+                print("Mot de passe invalide. Veuillez réessayer.")
 
         curseur.execute("SELECT * FROM utilisateurs WHERE email = %s", (email,))
         user = curseur.fetchone()
