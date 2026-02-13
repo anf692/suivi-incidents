@@ -26,19 +26,6 @@ Cette application console centralisée permet à chaque utilisateur (apprenant o
 
 ---
 
-## Architecture du projet
-
-suivi_incidents/
-│
-├── main.py # Menu principal et navigation
-├── db.py # Connexion à la base MySQL
-├── auth.py # Gestion inscription, connexion, déconnexion
-├── tickets.py # Gestion CRUD tickets et historique
-
-
-
----
-
 ## Base de données
 
 - **SGBD** : MySQL
