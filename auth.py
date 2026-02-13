@@ -1,5 +1,6 @@
 import bcrypt
 from db import connection_db
+import getpass
 
 #variable globale pour stocker l'utilisateur connecté
 actuelle_user = None
@@ -39,7 +40,7 @@ def inscription():
         #validation du mot de passe pour s'assurer qu'il n'est pas vide et a une longueur minimale
         while True:
             try:
-                password = input("Entrer votre Mot de passe: ").strip()
+                password = getpass.getpass("Entrer votre Mot de passe: ").strip()
                 if not password or len(password) < 8:
                     print("Mot de passe invalide (minimum 8 caractères).")
                     continue
@@ -95,7 +96,7 @@ def connexion():
         #validation du mot de passe pour s'assurer qu'il n'est pas vide
         while True:
             try:
-                password = input("Entrer votre Mot de passe: ").strip()
+                password = getpass.getpass("Entrer votre Mot de passe: ").strip()
                 if not password:
                     print("Mot de passe invalide.")
                     continue
